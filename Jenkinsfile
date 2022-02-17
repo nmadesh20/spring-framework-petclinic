@@ -7,10 +7,12 @@ pipeline {
     }
     stages {
         stage ('Maven Install') {
-            
-                docker {
+            agent none {
+            docker {
                     image 'maven:latest'
                 }
+            }
+                
            
             steps {
                 sh 'mvn clean install'
