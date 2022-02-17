@@ -7,7 +7,7 @@ pipeline {
     }
     stages {
         stage ('Maven Install') {
-            agent {
+            agent any {
                 docker {
                     image 'maven:latest'
                 }
