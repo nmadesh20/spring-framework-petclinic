@@ -28,8 +28,8 @@ steps:
           ]
         }
       failNoOp: true
-  - task: PublishPipelineArtifact@1
+  - task: PublishBuildArtifacts@1
     inputs:
-      targetPath: '*.war'
-      artifact: 'drop'
-      publishLocation: 'pipeline'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
