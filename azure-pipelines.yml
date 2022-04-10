@@ -10,25 +10,26 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-  - bash: |
-      echo "Using Environment variables"
-    env: 
-      MYSQL_SERVER_NAME: $(mysql_name)
-      MYSQL_SERVER_FULL_NAME: $(server_full_name)
-      MYSQL_SERVER_ADMIN_LOGIN_NAME: $(admin_name)
-      MYSQL_SERVER_ADMIN_PASSWORD: $(admin_pass)
-      MYSQL_DATABASE_NAME: $(database)
-      DOLLAR: \$
-  - task: Maven@3
+  
+ 
+
+
+  - task: ArtifactoryGenericDownload@3
     inputs:
-      mavenPomFile: 'pom.xml'
-      publishJUnitResults: true
-      testResultsFiles: '**/surefire-reports/TEST-*.xml'
-      javaHomeOption: 'JDKVersion'
-      mavenVersionOption: 'Default'
-      mavenAuthenticateFeed: false
-      effectivePomSkip: false
-      sonarQubeRunAnalysis: false
-
-
-
+      connection: 'JFrog Platform'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "generic-local/generic-local/drop/petclinic.war",
+              "target": "$(Build.ArtifactStagingDirectory)/"
+            }
+          ]
+        }
+      failNoOp: true
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$($(Build.ArtifactStagingDirectory))'
+      artifact: 'drop'
+      publishLocation: 'pipeline'
